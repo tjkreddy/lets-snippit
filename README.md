@@ -1,31 +1,30 @@
-# 📝 Let's Snippit
+#  Let's Snippit
 
 A modern, team-based code snippet management application built with React and Convex. Organize, share, and collaborate on code snippets with your team in a beautiful, intuitive interface.
 
 ![Project Preview](https://img.shields.io/badge/Status-Active-green) ![React](https://img.shields.io/badge/React-19.1.0-blue) ![Convex](https://img.shields.io/badge/Convex-1.25.4-purple)
 
-## ✨ Features
-
-### 🚀 Core Functionality
+## Features
+###  Core Functionality
 - **Code Snippet Management**: Create, edit, and delete code snippets with syntax highlighting
 - **Smart Search**: Search through snippets by title, description, or code content
 - **Tag-Based Organization**: Organize snippets with customizable tags for easy categorization
 - **Real-time Filtering**: Filter snippets by multiple tags simultaneously
 
-### 👥 Team Collaboration
+###  Team Collaboration
 - **Team-Based Authentication**: Join existing teams with team name and passcode
 - **Team Creation**: Create new teams with secure passcode protection
 - **Shared Snippet Library**: All team members can access and manage shared snippets
 - **Secure Access Control**: Team-based access ensures privacy and security
 
-### 🎨 User Experience
+###  User Experience
 - **Modern Dark Theme**: Beautiful, professional dark interface with cyan accents
 - **Responsive Design**: Works seamlessly across desktop and mobile devices
 - **One-Click Copy**: Copy snippets to clipboard with visual feedback
 - **Toast Notifications**: Real-time feedback for all user actions
 - **Intuitive Navigation**: Clean, organized interface for efficient workflow
 
-## 🛠️ Technology Stack
+##  Technology Stack
 
 - **Frontend**: React 19.1.0 with modern hooks and functional components
 - **Backend**: Convex for real-time database and API management
@@ -33,7 +32,7 @@ A modern, team-based code snippet management application built with React and Co
 - **Styling**: Tailwind CSS for responsive, utility-first styling
 - **Authentication**: Team-based authentication with secure passcode system
 
-## 📦 Installation
+##  Installation
 
 ### Prerequisites
 - Node.js (16.0 or higher)
@@ -75,7 +74,7 @@ A modern, team-based code snippet management application built with React and Co
    - Navigate to `http://localhost:5173`
    - Create a new team or join an existing one to get started
 
-## 🚀 Usage
+## Usage
 
 ### Getting Started
 
@@ -125,7 +124,7 @@ lets-snippit/
 └── App.tsx              # Main application component
 ```
 
-## 🎯 Key Components
+##  Key Components
 
 ### Authentication System
 - **Team-based approach**: No individual user accounts required
@@ -174,7 +173,7 @@ snippets: {
 }
 ```
 
-## 🤝 Contributing
+##  Contributing
 
 We welcome contributions! Please follow these steps:
 
@@ -190,18 +189,18 @@ We welcome contributions! Please follow these steps:
 - Test your changes thoroughly
 - Update documentation as needed
 
-## 📝 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+##  Acknowledgments
 
 - Built with [React](https://reactjs.org/) for the frontend framework
 - Powered by [Convex](https://convex.dev/) for real-time backend services
 - Styled with [Tailwind CSS](https://tailwindcss.com/) for utility-first styling
 - Icons designed with modern SVG components
 
-## 📧 Support
+##  Support
 
 For support, feedback, or questions:
 - Open an issue on GitHub
