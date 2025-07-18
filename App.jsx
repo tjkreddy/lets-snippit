@@ -21,7 +21,7 @@ const App = () => {
     addSnippet, 
     updateSnippet, 
     deleteSnippet 
-  } = useConvexSnippets();
+  } = useConvexSnippets(team?.id); // Pass team ID to filter snippets by team
   
   const [activeTags, setActiveTags] = useState([]);
   const [isFormOpen, setIsFormOpen] = useState(false);

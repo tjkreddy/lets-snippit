@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useMutation } from "convex/react";
+import { api } from "../convex/_generated/api";
 import { EyeIcon } from './icons/EyeIcon';
 import { EyeSlashIcon } from './icons/EyeSlashIcon';
 
@@ -12,6 +14,8 @@ const Signup = ({ onSignupSuccess, onSwitchToLogin }) => {
   const [showConfirmPasscode, setShowConfirmPasscode] = useState(false);
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+
+  const createTeamMutation = useMutation(api.auth.createTeam);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -64,13 +68,16 @@ const Signup = ({ onSignupSuccess, onSwitchToLogin }) => {
     setIsLoading(true);
     
     try {
-      // Simulate team creation process - in a real app, you'd call your auth service
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Call Convex auth function to create team
+      const team = await createTeamMutation({
+        teamName: formData.teamName.trim(),
+        passcode: formData.passcode
+      });
       
-      // Save team data to localStorage for demo
+      // Save team data to localStorage for demo auth state
       const teamData = {
-        id: Date.now(),
-        teamName: formData.teamName,
+        id: team.id,
+        teamName: team.teamName,
         createdTime: new Date().toISOString()
       };
       
@@ -83,7 +90,8 @@ const Signup = ({ onSignupSuccess, onSwitchToLogin }) => {
       // Force a page reload to trigger auth state update
       window.location.reload();
     } catch (error) {
-      setErrors({ general: 'Team creation failed. Please try again.' });
+      console.error('Signup error:', error);
+      setErrors({ general: error.message || 'Team creation failed. Please try again.' });
     } finally {
       setIsLoading(false);
     }

@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../convex/_generated/api";
 
-export function useConvexSnippets() {
+export function useConvexSnippets(teamId = null) {
   const [error, setError] = useState(null);
   
-  // Convex queries and mutations
-  const snippets = useQuery(api.snippets.getSnippets);
+  // Convex queries and mutations - pass teamId to filter by team
+  const snippets = useQuery(api.snippets.getSnippets, teamId ? { teamId } : {});
   const addSnippetMutation = useMutation(api.snippets.addSnippet);
   const updateSnippetMutation = useMutation(api.snippets.updateSnippet);
   const deleteSnippetMutation = useMutation(api.snippets.deleteSnippet);
@@ -20,6 +20,7 @@ export function useConvexSnippets() {
         description: snippet.description || "",
         code: snippet.code,
         tags: snippet.tags,
+        teamId: teamId || undefined, // Associate snippet with current team
       });
       return { _id: id, ...snippet, createdAt: Date.now() };
     } catch (error) {

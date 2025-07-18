@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useMutation } from "convex/react";
+import { api } from "../convex/_generated/api";
 import { EyeIcon } from './icons/EyeIcon';
 import { EyeSlashIcon } from './icons/EyeSlashIcon';
 
@@ -10,6 +12,8 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
   const [showPasscode, setShowPasscode] = useState(false);
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+
+  const joinTeamMutation = useMutation(api.auth.joinTeam);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -52,13 +56,16 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
     setIsLoading(true);
     
     try {
-      // Simulate team join process - in a real app, you'd call your auth service
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Call Convex auth function to join team
+      const team = await joinTeamMutation({
+        teamName: formData.teamName.trim(),
+        passcode: formData.passcode
+      });
       
-      // Save team data to localStorage for demo
+      // Save team data to localStorage for demo auth state
       const teamData = {
-        id: Date.now(),
-        teamName: formData.teamName,
+        id: team.id,
+        teamName: team.teamName,
         joinTime: new Date().toISOString()
       };
       
@@ -71,7 +78,8 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
       // Force a page reload to trigger auth state update
       window.location.reload();
     } catch (error) {
-      setErrors({ general: 'Failed to join team. Please check your team name and passcode.' });
+      console.error('Login error:', error);
+      setErrors({ general: error.message || 'Failed to join team. Please check your team name and passcode.' });
     } finally {
       setIsLoading(false);
     }
