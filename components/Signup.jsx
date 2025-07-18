@@ -2,12 +2,14 @@ import { useState } from 'react';
 import { EyeIcon } from './icons/EyeIcon';
 import { EyeSlashIcon } from './icons/EyeSlashIcon';
 
-const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
+const Signup = ({ onSignupSuccess, onSwitchToLogin }) => {
   const [formData, setFormData] = useState({
     teamName: '',
-    passcode: ''
+    passcode: '',
+    confirmPasscode: ''
   });
   const [showPasscode, setShowPasscode] = useState(false);
+  const [showConfirmPasscode, setShowConfirmPasscode] = useState(false);
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
@@ -32,10 +34,20 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
     
     if (!formData.teamName.trim()) {
       newErrors.teamName = 'Team name is required';
+    } else if (formData.teamName.length < 3) {
+      newErrors.teamName = 'Team name must be at least 3 characters';
     }
     
     if (!formData.passcode) {
       newErrors.passcode = 'Team passcode is required';
+    } else if (formData.passcode.length < 4) {
+      newErrors.passcode = 'Passcode must be at least 4 characters';
+    }
+    
+    if (!formData.confirmPasscode) {
+      newErrors.confirmPasscode = 'Please confirm your passcode';
+    } else if (formData.passcode !== formData.confirmPasscode) {
+      newErrors.confirmPasscode = 'Passcodes do not match';
     }
     
     setErrors(newErrors);
@@ -52,26 +64,26 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
     setIsLoading(true);
     
     try {
-      // Simulate team join process - in a real app, you'd call your auth service
+      // Simulate team creation process - in a real app, you'd call your auth service
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       // Save team data to localStorage for demo
       const teamData = {
         id: Date.now(),
         teamName: formData.teamName,
-        joinTime: new Date().toISOString()
+        createdTime: new Date().toISOString()
       };
       
       localStorage.setItem('team', JSON.stringify(teamData));
       
-      if (onLoginSuccess) {
-        onLoginSuccess();
+      if (onSignupSuccess) {
+        onSignupSuccess();
       }
       
       // Force a page reload to trigger auth state update
       window.location.reload();
     } catch (error) {
-      setErrors({ general: 'Failed to join team. Please check your team name and passcode.' });
+      setErrors({ general: 'Team creation failed. Please try again.' });
     } finally {
       setIsLoading(false);
     }
@@ -79,6 +91,10 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
 
   const togglePasscodeVisibility = () => {
     setShowPasscode(!showPasscode);
+  };
+
+  const toggleConfirmPasscodeVisibility = () => {
+    setShowConfirmPasscode(!showConfirmPasscode);
   };
 
   return (
@@ -89,11 +105,11 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
           <h1 className="text-3xl font-bold text-cyan-400 tracking-wider mb-2">
             Code<span className="text-white">Snippets</span>
           </h1>
-          <h2 className="text-2xl font-bold text-white mb-2">Join Your Team</h2>
-          <p className="text-gray-400">Enter your team name and passcode to access shared snippets</p>
+          <h2 className="text-2xl font-bold text-white mb-2">Create New Team</h2>
+          <p className="text-gray-400">Set up a team to start sharing code snippets</p>
         </div>
 
-        {/* Login Form */}
+        {/* Create Team Form */}
         <div className="bg-gray-800 rounded-lg shadow-xl p-8 border border-gray-700">
           <form className="space-y-6" onSubmit={handleSubmit}>
             {/* General Error */}
@@ -117,7 +133,7 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
                 className={`w-full px-3 py-2 bg-gray-700 rounded-md border ${
                   errors.teamName ? 'border-red-500 focus:ring-red-500' : 'border-gray-600 focus:ring-cyan-500'
                 } focus:border-transparent transition duration-200 text-white placeholder-gray-400`}
-                placeholder="Enter your team name"
+                placeholder="Choose a team name"
                 required
               />
               {errors.teamName && (
@@ -140,7 +156,7 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
                   className={`w-full px-3 py-2 pr-10 bg-gray-700 rounded-md border ${
                     errors.passcode ? 'border-red-500 focus:ring-red-500' : 'border-gray-600 focus:ring-cyan-500'
                   } focus:border-transparent transition duration-200 text-white placeholder-gray-400`}
-                  placeholder="Enter your team passcode"
+                  placeholder="Create a team passcode"
                   required
                 />
                 <button
@@ -160,6 +176,41 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
               )}
             </div>
 
+            {/* Confirm Passcode Field */}
+            <div>
+              <label htmlFor="confirmPasscode" className="block text-sm font-medium text-gray-300 mb-2">
+                Confirm Passcode
+              </label>
+              <div className="relative">
+                <input
+                  type={showConfirmPasscode ? 'text' : 'password'}
+                  id="confirmPasscode"
+                  name="confirmPasscode"
+                  value={formData.confirmPasscode}
+                  onChange={handleInputChange}
+                  className={`w-full px-3 py-2 pr-10 bg-gray-700 rounded-md border ${
+                    errors.confirmPasscode ? 'border-red-500 focus:ring-red-500' : 'border-gray-600 focus:ring-cyan-500'
+                  } focus:border-transparent transition duration-200 text-white placeholder-gray-400`}
+                  placeholder="Confirm your team passcode"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={toggleConfirmPasscodeVisibility}
+                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-300 transition duration-200"
+                >
+                  {showConfirmPasscode ? (
+                    <EyeSlashIcon className="w-5 h-5" />
+                  ) : (
+                    <EyeIcon className="w-5 h-5" />
+                  )}
+                </button>
+              </div>
+              {errors.confirmPasscode && (
+                <p className="mt-1 text-sm text-red-400">{errors.confirmPasscode}</p>
+              )}
+            </div>
+
             {/* Submit Button */}
             <button
               type="submit"
@@ -176,42 +227,42 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Joining team...
+                  Creating team...
                 </>
               ) : (
                 <>
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
                   </svg>
-                  Join Team
+                  Create Team
                 </>
               )}
             </button>
           </form>
 
           {/* Divider */}
-          <div className="mt-6">
+                    <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-600"></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-gray-800 text-gray-400">Don't have a team?</span>
+                <span className="px-2 bg-gray-800 text-gray-400">Already have a team?</span>
               </div>
             </div>
           </div>
 
-          {/* Create Team Button */}
+          {/* Join Team Button */}
           <div className="mt-6">
             <button
               type="button"
-              onClick={onSwitchToSignup}
+              onClick={onSwitchToLogin}
               className="w-full flex items-center justify-center py-3 px-4 rounded-md font-bold text-cyan-400 border border-cyan-400 hover:bg-cyan-400 hover:text-white transition duration-300 ease-in-out transform hover:scale-105 focus:ring-2 focus:ring-cyan-500 focus:outline-none"
             >
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
               </svg>
-              Create New Team
+              Join Existing Team
             </button>
           </div>
         </div>
@@ -219,7 +270,7 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
         {/* Footer */}
         <div className="text-center">
           <p className="text-gray-400 text-sm">
-            By signing in, you agree to our{' '}
+            By creating an account, you agree to our{' '}
             <button className="text-cyan-400 hover:text-cyan-300 transition duration-200">
               Terms of Service
             </button>{' '}
@@ -234,4 +285,4 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
   );
 };
 
-export default Login;
+export default Signup;

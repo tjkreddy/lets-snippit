@@ -4,13 +4,13 @@ import { v } from "convex/values";
 export default defineSchema({
   snippets: defineTable({
     title: v.string(),
-    description: v.optional(v.string()),
+    description: v.string(),
     code: v.string(),
     tags: v.array(v.string()),
     teamId: v.optional(v.id("teams")), // Link snippets to teams
     createdAt: v.number(),
     updatedAt: v.optional(v.number()),
-  }).index("by_created_at", ["createdAt"])
+  }).index("by_created_at", ["_creationTime"])
     .index("by_team", ["teamId"]),
 
   teams: defineTable({

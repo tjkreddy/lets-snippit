@@ -2,39 +2,11 @@ import { useState } from 'react';
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../convex/_generated/api";
 
-// Dummy snippets for fallback
-const DUMMY_SNIPPETS = [
-  {
-    _id: '1',
-    title: 'Hello World JavaScript',
-    description: 'Basic JavaScript hello world',
-    code: 'console.log("Hello, World!");',
-    tags: ['javascript', 'basic'],
-    createdAt: Date.now()
-  },
-  {
-    _id: '2',
-    title: 'Python List Comprehension',
-    description: 'Create a list with even numbers',
-    code: 'even_numbers = [x for x in range(10) if x % 2 == 0]',
-    tags: ['python', 'list-comprehension'],
-    createdAt: Date.now() - 1000
-  },
-  {
-    _id: '3',
-    title: 'CSS Flexbox Center',
-    description: 'Center an element with flexbox',
-    code: '.container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}',
-    tags: ['css', 'flexbox'],
-    createdAt: Date.now() - 2000
-  }
-];
-
 export function useConvexSnippets() {
   const [error, setError] = useState(null);
   
   // Convex queries and mutations
-  const snippets = useQuery(api.snippets.getSnippets) ?? DUMMY_SNIPPETS;
+  const snippets = useQuery(api.snippets.getSnippets);
   const addSnippetMutation = useMutation(api.snippets.addSnippet);
   const updateSnippetMutation = useMutation(api.snippets.updateSnippet);
   const deleteSnippetMutation = useMutation(api.snippets.deleteSnippet);

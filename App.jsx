@@ -1,13 +1,19 @@
 
 import { useState, useMemo, useCallback } from 'react';
 import { useConvexSnippets } from './hooks/useConvexSnippets';
+import { useAuth } from './hooks/useAuth';
 import Header from './components/Header';
 import SnippetList from './components/SnippetList';
 import SnippetForm from './components/SnippetForm';
 import TagFilter from './components/TagFilter';
 import Toast from './components/Toast';
+import Login from './components/Login';
+import Signup from './components/Signup';
 
 const App = () => {
+  const { isAuthenticated, team, loading: authLoading, joinTeam, createTeam, logout } = useAuth();
+  const [authMode, setAuthMode] = useState('login'); // 'login' or 'signup'
+  
   const { 
     snippets, 
     loading, 
@@ -96,9 +102,72 @@ const App = () => {
     }
   };
 
+  const handleLoginSuccess = async () => {
+    // The Login component handles the team join internally
+    // We just need to show a success message
+    showToast('Welcome to your team!');
+  };
+
+  const handleSignupSuccess = async () => {
+    // The Signup component handles the team creation internally
+    // We just need to show a success message
+    showToast('Team created successfully!');
+  };
+
+  const handleLogout = () => {
+    logout();
+    showToast('Left team successfully!');
+  };
+
+  // Show loading spinner while checking authentication
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+        <div className="flex flex-col items-center space-y-4">
+          <svg className="animate-spin h-8 w-8 text-cyan-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <p className="text-gray-400">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show authentication screens if not logged in
+  if (!isAuthenticated) {
+    if (authMode === 'login') {
+      return (
+        <>
+          <Login 
+            onLoginSuccess={handleLoginSuccess}
+            onSwitchToSignup={() => setAuthMode('signup')}
+          />
+          <Toast toast={toast} onDismiss={() => setToast(null)} />
+        </>
+      );
+    } else {
+      return (
+        <>
+          <Signup 
+            onSignupSuccess={handleSignupSuccess}
+            onSwitchToLogin={() => setAuthMode('login')}
+          />
+          <Toast toast={toast} onDismiss={() => setToast(null)} />
+        </>
+      );
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-900 font-sans text-gray-200">
-      <Header onAddSnippet={handleAddSnippet} searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+      <Header 
+        onAddSnippet={handleAddSnippet} 
+        searchTerm={searchTerm} 
+        onSearchChange={setSearchTerm}
+        team={team}
+        onLogout={handleLogout}
+      />
       
       <main className="container mx-auto px-4 py-8">
         <TagFilter

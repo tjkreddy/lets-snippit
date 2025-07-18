@@ -1,14 +1,24 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 
+// Get snippets for a specific team
 export const getSnippets = query({
-  args: {},
-  handler: async (ctx) => {
-    return await ctx.db
-      .query("snippets")
-      .withIndex("by_created_at")
-      .order("desc")
-      .collect();
+  args: { teamId: v.optional(v.id("teams")) },
+  handler: async (ctx, { teamId }) => {
+    if (teamId) {
+      return await ctx.db
+        .query("snippets")
+        .withIndex("by_team", (q) => q.eq("teamId", teamId))
+        .order("desc")
+        .collect();
+    } else {
+      // Return all snippets if no team specified (for demo/testing)
+      return await ctx.db
+        .query("snippets")
+        .withIndex("by_created_at")
+        .order("desc")
+        .collect();
+    }
   },
 });
 
@@ -18,6 +28,7 @@ export const addSnippet = mutation({
     description: v.optional(v.string()),
     code: v.string(),
     tags: v.array(v.string()),
+    teamId: v.optional(v.id("teams")),
   },
   handler: async (ctx, args) => {
     const snippet = {
@@ -25,6 +36,7 @@ export const addSnippet = mutation({
       description: args.description || "",
       code: args.code,
       tags: args.tags,
+      teamId: args.teamId,
       createdAt: Date.now(),
     };
     
