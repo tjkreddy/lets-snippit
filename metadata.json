@@ -1,0 +1,6 @@
+{
+  "name": "Code Snippet Manager",
+  "description": "A web-based application to help development teams save, organize, and share reusable code snippets. This tool enhances collaboration, reduces repetitive work, and centralizes useful code fragments for easy access.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}
