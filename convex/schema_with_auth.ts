@@ -7,7 +7,7 @@ export default defineSchema({
     description: v.string(),
     code: v.string(),
     tags: v.array(v.string()),
-    teamId: v.optional(v.id("teams")), // Link snippets to teams
+    teamId: v.optional(v.id("teams")), 
     createdAt: v.number(),
     updatedAt: v.optional(v.number()),
   }).index("by_created_at", ["_creationTime"])
@@ -15,7 +15,7 @@ export default defineSchema({
 
   teams: defineTable({
     teamName: v.string(),
-    passcode: v.string(), // Team passcode for access
+    passcode: v.string(),
     createdAt: v.number(),
   }).index("by_team_name", ["teamName"]),
 });
