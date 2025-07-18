@@ -43,7 +43,7 @@ const SnippetItem = ({ snippet, onEdit, onDelete, showToast }) => {
         </div>
         <div className="flex items-center gap-2">
           <button onClick={() => onEdit(snippet)} className="p-2 text-gray-400 hover:text-white transition-colors"><EditIcon className="w-5 h-5"/></button>
-          <button onClick={() => onDelete(snippet.id)} className="p-2 text-gray-400 hover:text-red-500 transition-colors"><TrashIcon className="w-5 h-5"/></button>
+          <button onClick={() => onDelete(snippet._id)} className="p-2 text-gray-400 hover:text-red-500 transition-colors"><TrashIcon className="w-5 h-5"/></button>
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 
 import { useState, useMemo, useCallback } from 'react';
-import { useSupabaseSnippets } from './hooks/useSupabaseSnippets';
+import { useConvexSnippets } from './hooks/useConvexSnippets';
 import Header from './components/Header';
 import SnippetList from './components/SnippetList';
 import SnippetForm from './components/SnippetForm';
@@ -15,7 +15,7 @@ const App = () => {
     addSnippet, 
     updateSnippet, 
     deleteSnippet 
-  } = useSupabaseSnippets();
+  } = useConvexSnippets();
   
   const [activeTags, setActiveTags] = useState([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -82,7 +82,7 @@ const App = () => {
     try {
       if (editingSnippet) {
         // Edit
-        await updateSnippet(editingSnippet.id, snippet);
+        await updateSnippet(editingSnippet._id, snippet);
         showToast('Snippet updated successfully!');
       } else {
         // Add
