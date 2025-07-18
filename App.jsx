@@ -1,15 +1,22 @@
 
 import { useState, useMemo, useCallback } from 'react';
-import { useLocalStorage } from './hooks/useLocalStorage';
+import { useSupabaseSnippets } from './hooks/useSupabaseSnippets';
 import Header from './components/Header';
 import SnippetList from './components/SnippetList';
 import SnippetForm from './components/SnippetForm';
 import TagFilter from './components/TagFilter';
 import Toast from './components/Toast';
-import { DUMMY_SNIPPETS } from './constants';
 
 const App = () => {
-  const [snippets, setSnippets] = useLocalStorage('code-snippets', DUMMY_SNIPPETS);
+  const { 
+    snippets, 
+    loading, 
+    error, 
+    addSnippet, 
+    updateSnippet, 
+    deleteSnippet 
+  } = useSupabaseSnippets();
+  
   const [activeTags, setActiveTags] = useState([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingSnippet, setEditingSnippet] = useState(null);
@@ -62,32 +69,31 @@ const App = () => {
     setIsFormOpen(true);
   };
 
-  const handleDeleteSnippet = useCallback((id) => {
-    setSnippets(prev => prev.filter(s => s.id !== id));
-    showToast('Snippet deleted successfully!');
-  }, [setSnippets]);
-
-  const handleSaveSnippet = (snippet) => {
-    if (editingSnippet) {
-      // Edit
-      setSnippets(prev =>
-        prev.map(s =>
-          s.id === editingSnippet.id ? { ...editingSnippet, ...snippet } : s
-        )
-      );
-      showToast('Snippet updated successfully!');
-    } else {
-      // Add
-      const newSnippet = {
-        ...snippet,
-        id: `snippet-${Date.now()}`,
-        createdAt: new Date().toISOString(),
-      };
-      setSnippets(prev => [newSnippet, ...prev]);
-      showToast('Snippet added successfully!');
+  const handleDeleteSnippet = useCallback(async (id) => {
+    try {
+      await deleteSnippet(id);
+      showToast('Snippet deleted successfully!');
+    } catch (error) {
+      showToast('Error deleting snippet!');
     }
-    setIsFormOpen(false);
-    setEditingSnippet(null);
+  }, [deleteSnippet]);
+
+  const handleSaveSnippet = async (snippet) => {
+    try {
+      if (editingSnippet) {
+        // Edit
+        await updateSnippet(editingSnippet.id, snippet);
+        showToast('Snippet updated successfully!');
+      } else {
+        // Add
+        await addSnippet(snippet);
+        showToast('Snippet added successfully!');
+      }
+      setIsFormOpen(false);
+      setEditingSnippet(null);
+    } catch (error) {
+      showToast('Error saving snippet!');
+    }
   };
 
   return (
