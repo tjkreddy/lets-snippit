@@ -1,14 +1,7 @@
 
-import React from 'react';
 import { PlusIcon } from './icons/PlusIcon';
 
-interface HeaderProps {
-  onAddSnippet: () => void;
-  searchTerm: string;
-  onSearchChange: (term: string) => void;
-}
-
-const Header: React.FC<HeaderProps> = ({ onAddSnippet, searchTerm, onSearchChange }) => {
+const Header = ({ onAddSnippet, searchTerm, onSearchChange }) => {
   return (
     <header className="sticky top-0 z-20 bg-gray-900/80 backdrop-blur-md shadow-lg shadow-gray-900/50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">

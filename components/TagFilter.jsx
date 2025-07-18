@@ -1,15 +1,8 @@
 
-import React from 'react';
+
 import { TagIcon } from './icons/TagIcon';
 
-interface TagFilterProps {
-  tags: string[];
-  activeTags: string[];
-  onToggleTag: (tag: string) => void;
-  onClearFilters: () => void;
-}
-
-const TagFilter: React.FC<TagFilterProps> = ({ tags, activeTags, onToggleTag, onClearFilters }) => {
+const TagFilter = ({ tags, activeTags, onToggleTag, onClearFilters }) => {
   if (tags.length === 0) return null;
 
   return (

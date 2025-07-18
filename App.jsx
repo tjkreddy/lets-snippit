@@ -1,6 +1,5 @@
 
-import React, { useState, useMemo, useCallback } from 'react';
-import { Snippet, ToastMessage } from './types';
+import { useState, useMemo, useCallback } from 'react';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import Header from './components/Header';
 import SnippetList from './components/SnippetList';
@@ -9,27 +8,27 @@ import TagFilter from './components/TagFilter';
 import Toast from './components/Toast';
 import { DUMMY_SNIPPETS } from './constants';
 
-const App: React.FC = () => {
-  const [snippets, setSnippets] = useLocalStorage<Snippet[]>('code-snippets', DUMMY_SNIPPETS);
-  const [activeTags, setActiveTags] = useState<string[]>([]);
+const App = () => {
+  const [snippets, setSnippets] = useLocalStorage('code-snippets', DUMMY_SNIPPETS);
+  const [activeTags, setActiveTags] = useState([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [editingSnippet, setEditingSnippet] = useState<Snippet | null>(null);
-  const [toast, setToast] = useState<ToastMessage>(null);
+  const [editingSnippet, setEditingSnippet] = useState(null);
+  const [toast, setToast] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const showToast = (message: string) => {
+  const showToast = (message) => {
     setToast({ id: Date.now(), message });
   };
 
   const allTags = useMemo(() => {
-    const tags = new Set<string>();
+    const tags = new Set();
     snippets.forEach(snippet => {
       snippet.tags.forEach(tag => tags.add(tag));
     });
     return Array.from(tags).sort();
   }, [snippets]);
 
-  const toggleTag = useCallback((tag: string) => {
+  const toggleTag = useCallback((tag) => {
     setActiveTags(prev =>
       prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
     );
@@ -58,17 +57,17 @@ const App: React.FC = () => {
     setIsFormOpen(true);
   };
 
-  const handleEditSnippet = (snippet: Snippet) => {
+  const handleEditSnippet = (snippet) => {
     setEditingSnippet(snippet);
     setIsFormOpen(true);
   };
 
-  const handleDeleteSnippet = useCallback((id: string) => {
+  const handleDeleteSnippet = useCallback((id) => {
     setSnippets(prev => prev.filter(s => s.id !== id));
     showToast('Snippet deleted successfully!');
   }, [setSnippets]);
 
-  const handleSaveSnippet = (snippet: Omit<Snippet, 'id' | 'createdAt'>) => {
+  const handleSaveSnippet = (snippet) => {
     if (editingSnippet) {
       // Edit
       setSnippets(prev =>
@@ -79,7 +78,7 @@ const App: React.FC = () => {
       showToast('Snippet updated successfully!');
     } else {
       // Add
-      const newSnippet: Snippet = {
+      const newSnippet = {
         ...snippet,
         id: `snippet-${Date.now()}`,
         createdAt: new Date().toISOString(),

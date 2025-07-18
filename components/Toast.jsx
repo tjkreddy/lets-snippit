@@ -1,14 +1,8 @@
 
-import React, { useEffect } from 'react';
-import { ToastMessage } from '../types';
+import { useEffect } from 'react';
 import { CheckCircleIcon } from './icons/CheckCircleIcon';
 
-interface ToastProps {
-  toast: ToastMessage;
-  onDismiss: () => void;
-}
-
-const Toast: React.FC<ToastProps> = ({ toast, onDismiss }) => {
+const Toast = ({ toast, onDismiss }) => {
   useEffect(() => {
     if (toast) {
       const timer = setTimeout(() => {

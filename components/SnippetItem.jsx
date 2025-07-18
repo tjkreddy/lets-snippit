@@ -1,19 +1,12 @@
 
-import React, { useState } from 'react';
-import { Snippet } from '../types';
+
+import { useState } from 'react';
 import { EditIcon } from './icons/EditIcon';
 import { TrashIcon } from './icons/TrashIcon';
 import { CopyIcon } from './icons/CopyIcon';
 import { ClipboardCheckIcon } from './icons/ClipboardCheckIcon';
 
-interface SnippetItemProps {
-  snippet: Snippet;
-  onEdit: (snippet: Snippet) => void;
-  onDelete: (id: string) => void;
-  showToast: (message: string) => void;
-}
-
-const SnippetItem: React.FC<SnippetItemProps> = ({ snippet, onEdit, onDelete, showToast }) => {
+const SnippetItem = ({ snippet, onEdit, onDelete, showToast }) => {
   const [isCopied, setIsCopied] = useState(false);
 
   const handleCopy = () => {

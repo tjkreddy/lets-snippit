@@ -1,15 +1,8 @@
 
-import React, { useState, useEffect } from 'react';
-import { Snippet } from '../types';
+import { useState, useEffect } from 'react';
 import { XIcon } from './icons/XIcon';
 
-interface SnippetFormProps {
-  snippet: Snippet | null;
-  onSave: (snippet: Omit<Snippet, 'id' | 'createdAt'>) => void;
-  onClose: () => void;
-}
-
-const SnippetForm: React.FC<SnippetFormProps> = ({ snippet, onSave, onClose }) => {
+const SnippetForm = ({ snippet, onSave, onClose }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [code, setCode] = useState('');
@@ -24,7 +17,7 @@ const SnippetForm: React.FC<SnippetFormProps> = ({ snippet, onSave, onClose }) =
     }
   }, [snippet]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (!title || !code) return;
 

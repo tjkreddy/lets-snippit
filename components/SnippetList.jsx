@@ -1,16 +1,8 @@
 
-import React from 'react';
-import { Snippet } from '../types';
+
 import SnippetItem from './SnippetItem';
 
-interface SnippetListProps {
-  snippets: Snippet[];
-  onEdit: (snippet: Snippet) => void;
-  onDelete: (id: string) => void;
-  showToast: (message: string) => void;
-}
-
-const SnippetList: React.FC<SnippetListProps> = ({ snippets, onEdit, onDelete, showToast }) => {
+const SnippetList = ({ snippets, onEdit, onDelete, showToast }) => {
   if (snippets.length === 0) {
     return (
       <div className="text-center py-16">
