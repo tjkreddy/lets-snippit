@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Demo - Code Snippet Manager</title>
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom scrollbars to match the main site */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1f2937; /* bg-gray-800 */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4b5563; /* bg-gray-600 */
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6b7280; /* bg-gray-500 */
+        }
+    </style>
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@^19.1.0",
+        "react-dom/": "https://esm.sh/react-dom@^19.1.0/",
+        "react/": "https://esm.sh/react@^19.1.0/"
+      }
+    }
+    </script>
+</head>
+<body class="bg-gray-900 text-gray-100">
+    <div id="login-root"></div>
+    <script type="module">
+        import React, { useState } from 'react';
+        import { createRoot } from 'react-dom/client';
+
+        // Eye Icons
+        const EyeIcon = (props) => React.createElement('svg', {
+            xmlns: "http://www.w3.org/2000/svg",
+            fill: "none",
+            viewBox: "0 0 24 24",
+            strokeWidth: 1.5,
+            stroke: "currentColor",
+            ...props
+        }, [
+            React.createElement('path', {
+                key: 1,
+                strokeLinecap: "round",
+                strokeLinejoin: "round",
+                d: "M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
+            }),
+            React.createElement('path', {
+                key: 2,
+                strokeLinecap: "round",
+                strokeLinejoin: "round",
+                d: "M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+            })
+        ]);
+
+        const EyeSlashIcon = (props) => React.createElement('svg', {
+            xmlns: "http://www.w3.org/2000/svg",
+            fill: "none",
+            viewBox: "0 0 24 24",
+            strokeWidth: 1.5,
+            stroke: "currentColor",
+            ...props
+        }, [
+            React.createElement('path', {
+                key: 1,
+                strokeLinecap: "round",
+                strokeLinejoin: "round",
+                d: "M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 01-4.243-4.243m4.242 4.242L9.88 9.88"
+            })
+        ]);
+
+        // Login Component
+        const LoginDemo = () => {
+            const [formData, setFormData] = useState({
+                username: '',
+                email: '',
+                password: ''
+            });
+            const [showPassword, setShowPassword] = useState(false);
+            const [errors, setErrors] = useState({});
+            const [isLoading, setIsLoading] = useState(false);
+
+            const handleInputChange = (e) => {
+                const { name, value } = e.target;
+                setFormData(prev => ({
+                    ...prev,
+                    [name]: value
+                }));
+                
+                if (errors[name]) {
+                    setErrors(prev => ({
+                        ...prev,
+                        [name]: ''
+                    }));
+                }
+            };
+
+            const validateForm = () => {
+                const newErrors = {};
+                
+                if (!formData.username.trim()) {
+                    newErrors.username = 'Username is required';
+                }
+                
+                if (!formData.email.trim()) {
+                    newErrors.email = 'Email is required';
+                } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+                    newErrors.email = 'Please enter a valid email address';
+                }
+                
+                if (!formData.password) {
+                    newErrors.password = 'Password is required';
+                } else if (formData.password.length < 6) {
+                    newErrors.password = 'Password must be at least 6 characters';
+                }
+                
+                setErrors(newErrors);
+                return Object.keys(newErrors).length === 0;
+            };
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                
+                if (!validateForm()) {
+                    return;
+                }
+                
+                setIsLoading(true);
+                
+                try {
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    alert('Login successful! (This is a demo)');
+                    console.log('Login successful with:', formData);
+                } catch (error) {
+                    console.error('Login failed:', error);
+                    setErrors({ general: 'Login failed. Please try again.' });
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+
+            const togglePasswordVisibility = () => {
+                setShowPassword(!showPassword);
+            };
+
+            return React.createElement('div', {
+                className: "min-h-screen bg-gray-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8"
+            }, [
+                React.createElement('div', {
+                    key: 1,
+                    className: "max-w-md w-full space-y-8"
+                }, [
+                    // Header
+                    React.createElement('div', {
+                        key: 1,
+                        className: "text-center"
+                    }, [
+                        React.createElement('h1', {
+                            key: 1,
+                            className: "text-3xl font-bold text-cyan-400 tracking-wider mb-2"
+                        }, [
+                            'Code',
+                            React.createElement('span', { key: 1, className: "text-white" }, 'Snippets')
+                        ]),
+                        React.createElement('h2', {
+                            key: 2,
+                            className: "text-2xl font-bold text-white mb-2"
+                        }, 'Welcome Back'),
+                        React.createElement('p', {
+                            key: 3,
+                            className: "text-gray-400"
+                        }, 'Sign in to access your code snippets')
+                    ]),
+
+                    // Login Form
+                    React.createElement('div', {
+                        key: 2,
+                        className: "bg-gray-800 rounded-lg shadow-xl p-8 border border-gray-700"
+                    }, [
+                        React.createElement('form', {
+                            key: 1,
+                            className: "space-y-6",
+                            onSubmit: handleSubmit
+                        }, [
+                            // Username Field
+                            React.createElement('div', { key: 1 }, [
+                                React.createElement('label', {
+                                    key: 1,
+                                    htmlFor: "username",
+                                    className: "block text-sm font-medium text-gray-300 mb-2"
+                                }, 'Username'),
+                                React.createElement('input', {
+                                    key: 2,
+                                    type: "text",
+                                    id: "username",
+                                    name: "username",
+                                    value: formData.username,
+                                    onChange: handleInputChange,
+                                    className: `w-full px-3 py-2 bg-gray-700 rounded-md border ${
+                                        errors.username ? 'border-red-500 focus:ring-red-500' : 'border-gray-600 focus:ring-cyan-500'
+                                    } focus:border-transparent transition duration-200 text-white placeholder-gray-400`,
+                                    placeholder: "Enter your username",
+                                    required: true
+                                }),
+                                errors.username && React.createElement('p', {
+                                    key: 3,
+                                    className: "mt-1 text-sm text-red-400"
+                                }, errors.username)
+                            ]),
+
+                            // Email Field
+                            React.createElement('div', { key: 2 }, [
+                                React.createElement('label', {
+                                    key: 1,
+                                    htmlFor: "email",
+                                    className: "block text-sm font-medium text-gray-300 mb-2"
+                                }, 'Email Address'),
+                                React.createElement('input', {
+                                    key: 2,
+                                    type: "email",
+                                    id: "email",
+                                    name: "email",
+                                    value: formData.email,
+                                    onChange: handleInputChange,
+                                    className: `w-full px-3 py-2 bg-gray-700 rounded-md border ${
+                                        errors.email ? 'border-red-500 focus:ring-red-500' : 'border-gray-600 focus:ring-cyan-500'
+                                    } focus:border-transparent transition duration-200 text-white placeholder-gray-400`,
+                                    placeholder: "Enter your email",
+                                    required: true
+                                }),
+                                errors.email && React.createElement('p', {
+                                    key: 3,
+                                    className: "mt-1 text-sm text-red-400"
+                                }, errors.email)
+                            ]),
+
+                            // Password Field
+                            React.createElement('div', { key: 3 }, [
+                                React.createElement('label', {
+                                    key: 1,
+                                    htmlFor: "password",
+                                    className: "block text-sm font-medium text-gray-300 mb-2"
+                                }, 'Password'),
+                                React.createElement('div', {
+                                    key: 2,
+                                    className: "relative"
+                                }, [
+                                    React.createElement('input', {
+                                        key: 1,
+                                        type: showPassword ? 'text' : 'password',
+                                        id: "password",
+                                        name: "password",
+                                        value: formData.password,
+                                        onChange: handleInputChange,
+                                        className: `w-full px-3 py-2 pr-10 bg-gray-700 rounded-md border ${
+                                            errors.password ? 'border-red-500 focus:ring-red-500' : 'border-gray-600 focus:ring-cyan-500'
+                                        } focus:border-transparent transition duration-200 text-white placeholder-gray-400`,
+                                        placeholder: "Enter your password",
+                                        required: true
+                                    }),
+                                    React.createElement('button', {
+                                        key: 2,
+                                        type: "button",
+                                        onClick: togglePasswordVisibility,
+                                        className: "absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-300 transition duration-200"
+                                    }, showPassword ? 
+                                        React.createElement(EyeSlashIcon, { className: "w-5 h-5" }) : 
+                                        React.createElement(EyeIcon, { className: "w-5 h-5" })
+                                    )
+                                ]),
+                                errors.password && React.createElement('p', {
+                                    key: 3,
+                                    className: "mt-1 text-sm text-red-400"
+                                }, errors.password)
+                            ]),
+
+                            // Submit Button
+                            React.createElement('button', {
+                                key: 4,
+                                type: "submit",
+                                disabled: isLoading,
+                                className: `w-full flex items-center justify-center py-3 px-4 rounded-md font-bold text-white transition duration-300 ease-in-out transform ${
+                                    isLoading 
+                                        ? 'bg-cyan-600 cursor-not-allowed' 
+                                        : 'bg-cyan-500 hover:bg-cyan-600 hover:scale-105 focus:ring-2 focus:ring-cyan-500 focus:outline-none'
+                                }`
+                            }, isLoading ? 'Signing in...' : 'Sign In')
+                        ])
+                    ])
+                ])
+            ]);
+        };
+
+        const root = createRoot(document.getElementById('login-root'));
+        root.render(React.createElement(LoginDemo));
+    </script>
+</body>
+</html>
